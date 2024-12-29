@@ -4,8 +4,8 @@ const terminal = new Terminal({
     rows: 20,
     cols: 80,
     theme: {
-      background: "#1e1e1e",
-      foreground: "#00ff00",
+      background: "#800080", // Purple background
+      foreground: "#00ff00", // Green text color
     },
   });
   
@@ -22,34 +22,41 @@ const terminal = new Terminal({
     about: "Hello! I'm Bikrant Sahoo, a software developer passionate about technology and open-source!",
   };
   
+  // Function to display the prompt
   terminal.prompt = () => {
     terminal.write("\r\n> ");
   };
   
+  // Display the initial prompt
   terminal.prompt();
   
+  // Listen for key presses
   terminal.onKey(({ key, domEvent }) => {
     const charCode = domEvent.keyCode || domEvent.which;
-    if (charCode === 13) {
-      // Enter key
+  
+    if (charCode === 13) {  // Enter key
+      // Get the current line of input
       const input = terminal.buffer.active.getLine(terminal.buffer.active.cursorY - 1).translateToString().trim();
       const command = input.split(">")[1]?.trim();
+  
       terminal.write("\r\n");
   
+      // Execute the command
       if (commands[command]) {
         terminal.writeln(commands[command]);
       } else if (command === "clear") {
-        terminal.clear();
+        terminal.clear();  // Clears the terminal screen
       } else {
         terminal.writeln(`Command not found: ${command}`);
       }
       terminal.prompt();
-    } else if (charCode === 8) {
-      // Backspace key
+    } else if (charCode === 8) {  // Backspace key
+      // Handle backspace properly
       if (terminal._core.buffer.x > 2) {
         terminal.write("\b \b");
       }
     } else {
+      // For any other key, just print it
       terminal.write(key);
     }
   });
